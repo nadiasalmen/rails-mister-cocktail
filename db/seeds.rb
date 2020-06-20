@@ -5,6 +5,63 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
-Ingredient.create(name: "lemon")
-Ingredient.create(name: "ice")
-Ingredient.create(name: "mint leaves")
+require 'open-uri'
+require 'json'
+
+if true
+  puts 'Erradicating ingredients.'
+  Ingredient.destroy_all
+  puts 'Seeding ingredients from the cocktailbd.'
+  url = 'https://www.thecocktaildb.com/api/json/v1/1/list.php?i=list'
+  ingredient_json = open(url).read
+  ingredient_hash = JSON.parse(ingredient_json)
+  ingredient_array = ingredient_hash['drinks']
+  ingredient_array.each do |ingredient|
+    Ingredient.create!(name: ingredient['strIngredient1'])
+  end
+  Ingredient.create!(name: 'Mint')
+  Ingredient.create!(name: 'Soda water')
+  Ingredient.create!(name: 'Campari')
+  puts "Ingredients seeded."
+else
+  puts 'Ingredients already seeded!'
+end
+
+puts 'Creating Mojito!'
+mojito = Cocktail.new(name: 'Mojito')
+mojito_doses = [
+  { ingr: 'Lime', desc: 'Juice of 1' },
+  { ingr: 'Light rum', desc: '2-3 oz' },
+  { ingr: 'Sugar', desc: '2 tsp' },
+  { ingr: 'Mint', desc: '2-4' },
+  { ingr: 'Soda water', desc: '.' }
+]
+if mojito.save
+  mojito_doses.each do |ingr|
+    dose = Dose.new(description: ingr[:desc])
+    dose.ingredient = Ingredient.find_by(name: ingr[:ingr])
+    dose.cocktail = mojito
+    dose.save!
+  end
+  puts 'Mojito created!'
+else
+  puts 'Mojito already created!'
+end
+puts 'Creating Negroni!'
+negroni = Cocktail.new(name: 'Negroni')
+negroni_doses = [
+  { ingr: 'Gin', desc: '1 oz' },
+  { ingr: 'Campari', desc: '1 oz' },
+  { ingr: 'Sweet Vermouth', desc: '1 oz' }
+]
+if negroni.save
+  negroni_doses.each do |ingr|
+    dose = Dose.new(description: ingr[:desc])
+    dose.ingredient = Ingredient.find_by(name: ingr[:ingr])
+    dose.cocktail = negroni
+    dose.save!
+  end
+  puts 'Negroni created!'
+else
+  puts 'Negroni already created!'
+end
