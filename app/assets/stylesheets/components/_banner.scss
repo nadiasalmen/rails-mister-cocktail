@@ -1,0 +1,19 @@
+.banner {
+  background-size: cover;
+  padding: 90px 0;
+}
+
+.banner h1 {
+  margin: 15px;
+  color: white;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+  font-size: 60px;
+  font-weight: bold;
+  font-family: 'Homemade Apple';
+  padding: 20px;
+}
+
+.banner > .btn {
+  position: relative;
+  bottom: -80px;
+}
